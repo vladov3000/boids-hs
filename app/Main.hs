@@ -1,17 +1,21 @@
 {-# LANGUAGE NamedFieldPuns #-}
 
-import Data.Bool
+module Main where
+
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Interact
 import Graphics.Gloss.Interface.Environment
 import System.Random
 
+windowWidth, windowHeight, framesPerSecond :: Int
 windowWidth = 600
 windowHeight = 600
 framesPerSecond = 120
+
+boidSize, boidSpeed, boidAcceleration, boidRange, boidView :: Float
 boidSize = 10
-boidSpeed = 150
-boidAcceleration = 50
+boidSpeed = 200
+boidAcceleration = 200
 boidRange = 50
 boidView = 270
 
@@ -99,8 +103,8 @@ handleInput (EventKey (MouseButton LeftButton) Down _ (x, y)) world =
 handleInput _ world = world
 
 spawnBoid :: StdGen -> Float -> Float -> (Boid, StdGen)
-spawnBoid rng' x y = (Boid (Vec2 x y) (boidSpeed *^ (Vec2 (cos angle) (sin angle))) vzero, rng'')
-                    where (angle, rng'') = uniformR (0, 2 * pi) rng'
+spawnBoid rng' x y = (Boid (Vec2 x y) (boidSpeed *^ (Vec2 (cos angle') (sin angle'))) vzero, rng'')
+                    where (angle', rng'') = uniformR (0, 2 * pi) rng'
 
 step :: Float -> World -> World
 step dt world = withBoids (map (\boid -> stepBoid dt (close boid) boid) $ boids world) world
